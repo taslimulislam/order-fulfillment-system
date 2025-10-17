@@ -15,6 +15,13 @@ class OrderPolicy
         //
     }
 
+    /**
+     * User can view own specified order.
+     *
+     * @param User $user Authenticated user.
+     * @param Order $order The order being accessed.
+     * @return bool True if the user is authorized to view the order.
+     */
     public function view(User $user, Order $order): bool
     {
         if ($user->role === 'buyer') {

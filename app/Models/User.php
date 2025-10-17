@@ -1,4 +1,5 @@
 <?php
+//Developer: Taslimul Islam | Reviewed: 2025‐10‐17
 
 namespace App\Models;
 
@@ -45,14 +46,29 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
+    /**
+     * Get seller products.
+     *
+     * @return HasMany
+     */
     public function products() { 
         return $this->hasMany(Product::class, 'seller_id'); 
     }
 
+    /**
+     * Get orders placed by the user.
+     *
+     * @return HasMany
+     */
     public function orders() { 
         return $this->hasMany(Order::class, 'buyer_id'); 
     }
 
+    /**
+     * Get seller sold items.
+     *
+     * @return HasMany
+     */
     public function soldItems() { 
         return $this->hasMany(OrderItem::class, 'seller_id'); 
     }

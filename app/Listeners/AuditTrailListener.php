@@ -1,4 +1,5 @@
 <?php
+//Developer: Taslimul Islam | Reviewed: 2025‐10‐17
 
 namespace App\Listeners;
 
@@ -19,7 +20,10 @@ class AuditTrailListener
     }
 
     /**
-     * Handle the event.
+     * Handle the OrderPlaced event and log audit metadata.
+     *
+     * @param OrderPlaced $event The dispatched order event.
+     * @return void
      */
     public function handle(OrderPlaced $event): void
     {

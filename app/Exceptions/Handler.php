@@ -1,8 +1,10 @@
 <?php
-
+//Developer: Taslimul Islam | Reviewed: 2025‐10‐18
 namespace App\Exceptions;
 
+use App\Helpers\ApiResponse;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Validation\ValidationException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -27,4 +29,20 @@ class Handler extends ExceptionHandler
             //
         });
     }
+
+    /**
+     * Render an exception into an HTTP response.
+     *
+     * @param \Illuminate\Http\Request $request The incoming HTTP request.
+     * @param \Throwable $exception The exception that was thrown.
+     * @return \Illuminate\Http\JsonResponse|\Symfony\Component\HttpFoundation\Response
+     */
+    public function render($request, Throwable $exception)
+    {
+        if ($exception instanceof ValidationException) {
+            return ApiResponse::error('Validation failed', 422, $exception->errors());
+        }
+        return parent::render($request, $exception);
+    }
+
 }

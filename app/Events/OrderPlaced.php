@@ -1,4 +1,5 @@
 <?php
+//Developer: Taslimul Islam | Reviewed: 2025‐10‐17
 
 namespace App\Events;
 
@@ -15,7 +16,9 @@ class OrderPlaced
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     /**
-     * Create a new event instance.
+     * Create a new job instance.
+     *
+     * @param int $orderId The ID of the order to process.
      */
     public function __construct(public readonly int $orderId) {}
 

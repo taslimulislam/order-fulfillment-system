@@ -1,4 +1,5 @@
 <?php
+//Developer: Taslimul Islam | Reviewed: 2025‐10‐18
 
 namespace App\Listeners;
 
@@ -20,16 +21,29 @@ class SendOrderConfirmationListener implements ShouldQueue
     }
 
     /**
-     * Handle the event.
+     * The number of times the job may be attempted before failing.
+     *
+     * @var int
      */
     public $tries = 3;
+
+    /**
+     * The backoff intervals (in seconds) between retry attempts.
+     *
+     * @var array<int>
+     */
     public $backoff = [10, 60, 180];
 
+    /**
+     * Handle the OrderPlaced event and log confirmation details.
+     *
+     * @param OrderPlaced $event Dispatched order event.
+     * @return void
+     */
     public function handle(OrderPlaced $event): void
     {
         $order = Order::with('buyer', 'items.product')->findOrFail($event->orderId);
 
-        // Example: replace with Mail + Mailable in real app
         Log::info('Order confirmation queued', [
             'order_id' => $order->id,
             'email' => $order->buyer->email,

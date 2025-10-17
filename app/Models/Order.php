@@ -1,5 +1,5 @@
 <?php
-
+//Developer: Taslimul Islam | Reviewed: 2025‐10‐17
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -16,11 +16,21 @@ class Order extends Model
         'status',
     ];
 
+    /**
+     * Get buyer who placed order.
+     *
+     * @return BelongsTo
+     */
 
     public function buyer() { 
         return $this->belongsTo(User::class, 'buyer_id'); 
     }
 
+    /**
+     * Get items for specific order.
+     *
+     * @return HasMany
+     */
     public function items() { 
         return $this->hasMany(OrderItem::class); 
     }

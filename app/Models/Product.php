@@ -1,4 +1,5 @@
 <?php
+//Developer: Taslimul Islam | Reviewed: 2025‐10‐17
 
 namespace App\Models;
 
@@ -16,6 +17,11 @@ class Product extends Model
         'stock_quantity',
     ];
 
+    /**
+     * Get seller product.
+     *
+     * @return BelongsTo
+     */
 
     public function seller() { 
         return $this->belongsTo(User::class, 'seller_id'); 

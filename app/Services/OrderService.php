@@ -1,4 +1,5 @@
 <?php
+//Developer: Taslimul Islam | Reviewed: 2025‐10‐18
 
 namespace App\Services;
 
@@ -14,11 +15,26 @@ use Illuminate\Validation\ValidationException;
 
 class OrderService
 {
+    /**
+     * Initialize required repository dependencies.
+     *
+     * @param ProductRepository $productRepo Repository for product operations.
+     * @param OrderRepository $orderRepo Repository for order operations.
+     */
     public function __construct(
         private readonly ProductRepository $productRepo,
         private readonly OrderRepository $orderRepo,
     ) {}
 
+    /**
+     * New order create.
+     *
+     * @param User $buyer authenticated buyer.
+     * @param array $data Validated order data.
+     * @return Order order instance.
+     *
+     * @throws Exception If order creation fails.
+     */ 
     public function createOrder(User $buyer, array $data)
     {
         if ($buyer->role !== 'buyer') {
@@ -42,7 +58,6 @@ class OrderService
             $orderItems = [];
             $total = 0.0;
 
-            /** @var Collection<int, array> $itemRequests */
             foreach ($itemRequests as $req) {
                 $product = $products->get($req['product_id']);
                 if (! $product) {
@@ -54,7 +69,7 @@ class OrderService
                     throw ValidationException::withMessages(['quantity' => 'Quantity must be positive.']);
                 }
                 if ($product->stock_quantity < $qty) {
-                    throw ValidationException::withMessages(['stock' => "Insufficient stock for product {$product->id}."]);
+                    throw ValidationException::withMessages(['stock' => "Insufficient stock for product: {$product->name}."]);
                 }
 
                 $unitPrice = (float) $product->price;

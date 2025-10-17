@@ -1,5 +1,5 @@
 <?php
-
+//Developer: Taslimul Islam | Reviewed: 2025‐10‐17
 namespace App\Listeners;
 
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -25,12 +25,25 @@ class UpdateSellerBalanceListener implements ShouldQueue
     }
 
     /**
-     * Handle the event.
+     * The number of times the job may be attempted.
+     *
+     * @var int
      */
-    
     public $tries = 5;
+
+    /**
+     * The backoff intervals (in seconds) between retry attempts.
+     *
+     * @var array<int>
+     */
     public $backoff = [10, 30, 60, 120, 300];
 
+    /**
+     * Handle the OrderPlaced event and update seller balances.
+     *
+     * @param OrderPlaced $event Dispatched order event.
+     * @return void
+     */
     public function handle(OrderPlaced $event): void
     {
         $order = Order::with('items')->findOrFail($event->orderId);

@@ -1,4 +1,5 @@
 <?php
+//Developer: Taslimul Islam | Reviewed: 2025‐10‐17
 
 namespace App\Jobs;
 
@@ -17,6 +18,8 @@ class GenerateInvoiceJob implements ShouldQueue
 
     /**
      * Create a new job instance.
+     *
+     * @param int $orderId The ID of the order to process.
      */
     public function __construct(public readonly int $orderId)
     {
@@ -24,7 +27,9 @@ class GenerateInvoiceJob implements ShouldQueue
     }
 
     /**
-     * Execute the job.
+     * Execute the job and generate the invoice file.
+     *
+     * @return void
      */
     public function handle(): void
     {

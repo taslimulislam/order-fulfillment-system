@@ -1,4 +1,5 @@
 <?php
+//Developer: Taslimul Islam | Reviewed: 2025‐10‐17
 
 namespace App\Models;
 
@@ -18,14 +19,29 @@ class OrderItem extends Model
         'line_total',
     ];
 
+    /**
+     * Order details of order item.
+     *
+     * @return BelongsTo
+     */
     public function order() { 
         return $this->belongsTo(Order::class); 
     }
 
+    /**
+     * Get product associated with order item.
+     *
+     * @return BelongsTo
+     */
     public function product() { 
         return $this->belongsTo(Product::class); 
     }
 
+    /**
+     * Get seller associated with order item.
+     *
+     * @return BelongsTo
+     */
     public function seller() { 
         return $this->belongsTo(User::class, 'seller_id'); 
     }

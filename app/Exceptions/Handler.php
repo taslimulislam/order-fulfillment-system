@@ -3,6 +3,7 @@
 namespace App\Exceptions;
 
 use App\Helpers\ApiResponse;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Validation\ValidationException;
 use Throwable;
@@ -45,4 +46,20 @@ class Handler extends ExceptionHandler
         return parent::render($request, $exception);
     }
 
+    /**
+     * Handle unauthenticated access attempts.
+     * This method is triggered when a request fails authentication via middleware such as `auth:sanctum`.
+     *
+     * @param \Illuminate\Http\Request $request The incoming HTTP request.
+     * @param \Illuminate\Auth\AuthenticationException $exception The thrown authentication exception.
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse
+     */
+    public function unauthenticated($request, AuthenticationException $exception)
+    {
+        if ($request->expectsJson()) {
+            return ApiResponse::error('Authentication required. Please log in.', 401);
+        }
+
+        return redirect()->guest(route('login'));
+    }
 }

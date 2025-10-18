@@ -22,6 +22,13 @@ class OrderController extends Controller
     public function __construct(private readonly OrderService $orderService)
     {
         $this->middleware('auth:sanctum');
+        $this->middleware(function ($request, $next) {
+        if (! $request->user()) {
+            return ApiResponse::error('Auth user not found', 401);
+        }
+        return $next($request);
+    });
+
     }
 
     /**

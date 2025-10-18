@@ -1,12 +1,11 @@
 <?php
-//Developer: Taslimul Islam | Reviewed: 2025‐10‐17
+//Developer: Taslimul Islam | Reviewed: 2025‐10‐18
 namespace App\Listeners;
 
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use App\Events\OrderPlaced;
-use App\Models\Order;
-use App\Models\User;
+use App\Models\{Order, User};
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 

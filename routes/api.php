@@ -1,5 +1,5 @@
 <?php
-//Developer: Taslimul Islam | Reviewed: 2025‐10‐17
+//Developer: Taslimul Islam | Reviewed: 2025‐10‐18
 
 use App\Http\Controllers\Api\V1\AuthController;
 use Illuminate\Http\Request;
@@ -19,12 +19,12 @@ use App\Http\Controllers\Api\V1\OrderController;
 */
 Route::prefix('v1')->group(function () {
     // Authentication routes
-    Route::post('register', [AuthController::class, 'register']);
-    Route::post('login', [AuthController::class, 'login']);
-
+    Route::post('login', [AuthController::class, 'login'])->name('login');
+    
     Route::middleware('auth:sanctum')->group(function () {
         Route::post('/orders', [OrderController::class, 'store']);
         Route::get('/orders/{order}', [OrderController::class, 'show']);
+        Route::post('logout', [AuthController::class, 'logout']);
     });
 });
 

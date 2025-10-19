@@ -1,17 +1,22 @@
 <?php
-//Developer: Taslimul Islam | Reviewed: 2025‐10‐18
+//Developer: Taslimul Islam | Reviewed: 2025‐10‐20
 
 namespace App\Listeners;
 
 use App\Events\OrderPlaced;
+use App\Mail\OrderConfirmationMail;
 use App\Models\Order;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 
 class SendOrderConfirmationListener implements ShouldQueue
 {
+
+    use InteractsWithQueue;
+
     /**
      * Create the event listener.
      */
@@ -48,6 +53,8 @@ class SendOrderConfirmationListener implements ShouldQueue
             'order_id' => $order->id,
             'email' => $order->buyer->email,
         ]);
+
+        Mail::to($order->buyer->email)->send(new OrderConfirmationMail($order));
 
     }
 

@@ -1,5 +1,5 @@
 <?php
-//Developer: Taslimul Islam | Reviewed: 2025‐10‐18
+//Developer: Taslimul Islam | Reviewed: 2025‐10‐19
 
 namespace App\Services;
 
@@ -18,12 +18,12 @@ class OrderService
     /**
      * Initialize required repository dependencies.
      *
-     * @param ProductRepository $productRepo Repository for product operations.
-     * @param OrderRepository $orderRepo Repository for order operations.
+     * @param ProductRepository $productRepository Repository for product operations.
+     * @param OrderRepository $orderRepository Repository for order operations.
      */
     public function __construct(
-        private readonly ProductRepository $productRepo,
-        private readonly OrderRepository $orderRepo,
+        private readonly ProductRepository $productRepository,
+        private readonly OrderRepository $orderRepository,
     ) {}
 
     /**
@@ -51,7 +51,7 @@ class OrderService
 
         return DB::transaction(function () use ($buyer, $itemRequests) {
             $productIds = $itemRequests->pluck('product_id')->all();
-            $products = $this->productRepo
+            $products = $this->productRepository
                 ->getProductsForOrderWithLock($productIds)
                 ->keyBy('id');
 
@@ -78,24 +78,24 @@ class OrderService
 
                 $orderItems[] = [
                     'product_id' => $product->id,
-                    'seller_id' => $product->seller_id,
-                    'quantity' => $qty,
+                    'seller_id'  => $product->seller_id,
+                    'quantity'   => $qty,
                     'unit_price' => $unitPrice,
                     'line_total' => $lineTotal,
                 ];
             }
 
-            $order = $this->orderRepo->createOrder($buyer->id, [
+            $order = $this->orderRepository->createOrder($buyer->id, [
                 'total_amount' => $total,
             ]);
 
-            $this->orderRepo->createItems($order, $orderItems);
+            $this->orderRepository->createItems($order, $orderItems);
 
-            foreach ($orderItems as $oi) {
-                $this->productRepo->decrementStock($products->get($oi['product_id']), $oi['quantity']);
+            foreach ($orderItems as $item) {
+                $this->productRepository->decrementStock($products->get($item['product_id']), $item['quantity']);
             }
 
-            $order->update(['status' => 'completed']);
+            $order->update(['status' => 'paid']);
 
             // Event::dispatch(new OrderPlaced($order->id))->afterCommit();
             event(new OrderPlaced($order->id));

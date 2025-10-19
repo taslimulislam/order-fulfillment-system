@@ -1,11 +1,11 @@
 <?php
-//Developer: Taslimul Islam | Reviewed: 2025‐10‐18
+//Developer: Taslimul Islam | Reviewed: 2025‐10‐19
 
 use App\Http\Controllers\Api\V1\AuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\V1\OrderController;
-
+use App\Http\Controllers\Api\V1\OrderReportController;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,8 +22,10 @@ Route::prefix('v1')->group(function () {
     Route::post('login', [AuthController::class, 'login'])->name('login');
     
     Route::middleware('auth:sanctum')->group(function () {
-        Route::post('/orders', [OrderController::class, 'store']);
-        Route::get('/orders/{order}', [OrderController::class, 'show']);
+        Route::prefix('orders')->group(function () {
+            Route::post('/', [OrderController::class, 'store']);
+            Route::get('/report', [OrderReportController::class, 'roleBasedOrderReport']);
+        });
         Route::post('logout', [AuthController::class, 'logout']);
     });
 });

@@ -50,7 +50,7 @@ class OrderFulfillmentSeeder extends Seeder
                 $order = Order::create([
                     'buyer_id' => $buyer->id,
                     'order_number' => $orderNumber,
-                    'status' => 'completed',
+                    'status' => 'paid',
                     'total_amount' => 0,
                 ]);
 

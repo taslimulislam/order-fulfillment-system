@@ -1,5 +1,5 @@
 <?php
-//Developer: Taslimul Islam | Reviewed: 2025‐10‐18
+//Developer: Taslimul Islam | Reviewed: 2025‐10‐19
 
 namespace App\Http\Requests;
 
@@ -23,7 +23,6 @@ class StoreOrderRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'buyer_id' => ['required', 'integer', 'exists:users,id'],
             'items'    => ['required', 'array', 'min:1'],
             'items.*.product_id' => ['required', 'integer', 'exists:products,id'],
             'items.*.quantity'   => ['required', 'integer', 'min:1'],

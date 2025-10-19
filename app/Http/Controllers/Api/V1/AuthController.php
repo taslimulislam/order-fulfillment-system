@@ -41,7 +41,7 @@ class AuthController extends Controller
     }
 
     /**
-     * Logut the authenticated user.
+     * Logout the authenticated user.
      *
      * @return \Illuminate\Http\JsonResponse JSON response confirming logout.
      */

@@ -39,4 +39,15 @@ class OrderRepository
             $order->items()->create($item);
         }
     }
+
+    /**
+     * Get all 'paid' ststus orders.
+     *
+     * @return \Illuminate\Support\Collection
+     */
+    public function getPaidOrders()
+    {
+        return Order::where('status', 'paid')->get();
+    }
+
 }

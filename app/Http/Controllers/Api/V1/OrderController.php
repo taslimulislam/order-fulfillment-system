@@ -1,5 +1,5 @@
 <?php
-//Developer: Taslimul Islam | Reviewed: 2025‐10‐18
+//Developer: Taslimul Islam | Reviewed: 2025‐10‐19
 
 namespace App\Http\Controllers\Api\V1;
 
@@ -10,7 +10,7 @@ use App\Models\Order;
 use App\Services\OrderService;
 use Exception;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Auth;
 
 class OrderController extends Controller
 {
@@ -23,11 +23,11 @@ class OrderController extends Controller
     {
         $this->middleware('auth:sanctum');
         $this->middleware(function ($request, $next) {
-        if (! $request->user()) {
-            return ApiResponse::error('Auth user not found', 401);
-        }
-        return $next($request);
-    });
+            if (! $request->user()) {
+                return ApiResponse::error('Auth user not found', 401);
+            }
+            return $next($request);
+        });
 
     }
 
@@ -40,7 +40,7 @@ class OrderController extends Controller
     public function store(StoreOrderRequest $request)
     {
         try {
-            $order = $this->orderService->createOrder($request->user(), $request->validated());
+            $order = $this->orderService->createOrder(Auth::user(), $request->validated());
 
             return ApiResponse::success([
                 'order_id'     => $order->id,
@@ -53,20 +53,4 @@ class OrderController extends Controller
         }
         return ApiResponse::error('Failed to place order. Please try again later.', 500);
     }
-
-    /**
-     * View specific order details.
-     *
-     * @param Order $order order model instance.
-     * @return \Illuminate\Http\JsonResponse JSON response with order data.
-     */
-    public function show(Order $order)
-    {
-        $this->authorize('view', $order);
-
-        $order->load('items.product', 'buyer');
-
-        return ApiResponse::success($order);
-    }
-
 }

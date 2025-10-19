@@ -1,5 +1,5 @@
 <?php
-//Developer: Taslimul Islam | Reviewed: 2025‐10‐18
+//Developer: Taslimul Islam | Reviewed: 2025‐10‐19
 namespace App\Exceptions;
 
 use App\Helpers\ApiResponse;
@@ -41,7 +41,12 @@ class Handler extends ExceptionHandler
     public function render($request, Throwable $exception)
     {
         if ($exception instanceof ValidationException) {
-            return ApiResponse::error('Validation failed', 422, $exception->errors());
+            if ($request->expectsJson()) {
+                return ApiResponse::error('Validation failed', 422, $exception->errors());
+            }
+            // Let Laravel handle web validation errors (redirect with errors)
+            return parent::render($request, $exception);
+
         }
         return parent::render($request, $exception);
     }

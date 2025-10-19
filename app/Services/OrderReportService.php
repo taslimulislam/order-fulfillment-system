@@ -29,20 +29,20 @@ class OrderReportService
         if ($user->role === 'seller') {
             return [
                 'role' => 'seller',
-                'seller_products' => $this->repository->getSellerProducts($user->id),
-                'related_orders' => $this->repository->getOrdersWithSellerProducts($user->id),
+                'products' => $this->repository->getSellerProducts($user->id),
+                'orders'   => $this->repository->getOrdersWithSellerProducts($user->id),
             ];
         }
 
         if ($user->role === 'buyer') {
             return [
-                'role' => 'buyer',
+                'role'   => 'buyer',
                 'orders' => $this->repository->getBuyerOrders($user->id),
             ];
         }
 
         return [
-            'status' => 'error',
+            'status'  => 'error',
             'message' => 'Unsupported role or unauthorized access.',
         ];
     }

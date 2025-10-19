@@ -8,9 +8,7 @@ use App\Models\User;
 use App\Repositories\OrderRepository;
 use App\Repositories\ProductRepository;
 use Illuminate\Auth\Access\AuthorizationException;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Event;
 use Illuminate\Validation\ValidationException;
 
 class OrderService
@@ -97,7 +95,6 @@ class OrderService
 
             $order->update(['status' => 'paid']);
 
-            // Event::dispatch(new OrderPlaced($order->id))->afterCommit();
             event(new OrderPlaced($order->id));
 
             return $order;

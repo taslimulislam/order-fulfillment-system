@@ -1,66 +1,194 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Order Fulfillment System
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+**Developer:** Taslimul Islam  
+**Date:** 2025-10-20  
+**Framework:** Laravel 10+  
+**Architecture:** Modular, Event-Driven, Service-Repository Pattern  
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 🧩 Overview
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+This project implements a **multi-vendor Order Fulfillment System** where buyers can place orders containing products from multiple sellers.  
+The system is fully **event-driven**, ensuring clean separation between core business logic and side effects such as balance updates, mail notifications, and audit logging.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+---
 
-## Learning Laravel
+## ⚙️ Installation & Running Steps
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### 1. Clone Repository
+```bash
+git clone https://github.com/taslimulislam/order-fulfillment-system.git
+cd order-fulfillment-system
+```
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+### 2. Install Dependencies
+```bash
+composer install
+```
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### 3. Configure Environment
+Copy `.env.example` and update your local database credentials:
+```bash
+cp .env.example .env
+php artisan key:generate
+```
+### 4. Setup Database Connection
+Before running migrations, open the `.env` file and configure your **database connection** properly:
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=your_database_name
+DB_USERNAME=root
+DB_PASSWORD=
+```
+Make sure your database is created and accessible.
 
-## Laravel Sponsors
+### 5. Install and Configure Sanctum
+```bash
+composer require laravel/sanctum
+php artisan vendor:publish --provider="Laravel\Sanctum\SanctumServiceProvider"
+```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### 6. Run Migrations & Seeders
+```bash
+php artisan migrate --seed
+```
 
-### Premium Partners
+### 6. Run the Queue Worker
+```bash
+php artisan queue:work
+```
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+### 7. Start the Development Server
+```bash
+php artisan serve
+```
+### 🧑‍💻 Login Information
+Use the following credentials to log in via API:
 
-## Contributing
+- **Buyer Account:** Retrieve a user with role `buyer` from the `users` table  
+- **Seller Account:** Retrieve a user with role `seller` from the `users` table  
+- **Password:** `123456`
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Example (Postman or cURL):
+```json
+POST /api/v1/login
+{
+  "email": "get buyer or seller email from database (buyer@example.com)",
+  "password": "123456"
+}
+```
 
-## Code of Conduct
+### 8. API Authentication
+Log in via `/api/v1/login` to receive a Sanctum token for authorized API calls.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## 🧾 Example API Endpoints
 
-## Security Vulnerabilities
+| Endpoint | Method | Description |
+|-----------|--------|-------------|
+| `/api/v1/login` | POST | Authenticate user and generate Sanctum token |
+| `/api/v1/orders` | POST | Create a new order (Buyer only) |
+| `/api/v1/orders/report` | GET | Role-based order report (Buyer/Seller) |
+| `/api/v1/logout` | POST | Logout and revoke current token |
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+---
 
-## License
+## 🔁 System Flow (Bullet Summary)
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+1. **User Login** – Authenticates buyer/seller and issues Sanctum token.  
+2. **Order Creation** – Buyer places an order with product and quantity details.  
+3. **Order Service** – Validates stock, creates order + items transactionally, fires `OrderPlaced` event.  
+4. **Event System** – Listeners handle side effects asynchronously (balance updates, email, audit log).  
+5. **Invoice Jobs** – Generates invoices daily or on demand for missing ones.  
+6. **Role-based Reports** – Returns filtered orders based on user role (buyer/seller).  
+7. **Logout** – Invalidates the user’s active token.
+
+---
+
+## 📊 Flow Diagram (Textual Representation)
+
+```
+[ Buyer Places Order ]
+          |
+          v
+[ OrderService::createOrder() ]
+          |
+          v
+  [ Validate Stock + Compute Total ]
+          |
+          v
+  [ Create Order + OrderItems (Transaction) ]
+          |
+          v
+  [ Fire OrderPlaced Event ]
+          |
+          ├──> UpdateSellerBalanceListener
+          ├──> SendOrderConfirmationListener
+          └──> AuditTrailListener
+          
+(Asynchronous Jobs -> GenerateInvoiceJob)
+```
+
+---
+
+## 🧠 Explanation of Components
+
+### 🔹 Events
+**OrderPlaced** – Fired after order creation to notify other subsystems.
+
+### 🔹 Listeners
+- **UpdateSellerBalanceListener:** Updates seller balances.  
+- **SendOrderConfirmationListener:** Sends (simulated) order confirmation emails.  
+- **AuditTrailListener:** Logs detailed JSON entries in `storage/logs/orders.log`.
+
+### 🔹 Observers
+- **OrderObserver:** Automatically assigns unique order numbers before saving.
+
+### 🔹 Repositories
+- **OrderRepository:** Handles all order CRUD operations.  
+- **ProductRepository:** Manages product stock, availability, and retrieval.
+
+### 🔹 Services
+- **OrderService:** Contains all order creation logic, wrapped in a DB transaction.
+
+### 🔹 Jobs
+- **GenerateInvoiceJob:** Generates invoice files asynchronously under `storage/app/invoices/`.
+
+---
+
+## 🧾 Invoice Generation Commands
+
+Finds **paid but uninvoiced orders** and dispatches `GenerateInvoiceJob` for each.
+
+### Missing Invoice Dispatcher
+```bash
+php artisan invoices:dispatch-missing
+```
+Finds **paid orders missing invoices** (even after initial processing) and dispatches invoice generation jobs again.  
+Useful for retrying failed or missed invoice generations.
+
+---
+
+## ✅ Key Features
+- Laravel Sanctum authentication  
+- Role-based authorization (Buyer/Seller)  
+- Clean architecture (Service + Repository)  
+- Event-driven domain logic  
+- Queued listeners for async tasks  
+- Daily & missing invoice generation commands  
+- Structured audit logging  
+- PSR-12 and SOLID-compliant code  
+
+---
+
+## 📘 Documentation Files
+- **ARCHITECTURE_NOTES.md** – Design rationale & trade-offs  
+- **README.md** – Setup & technical overview  
+- **Postman Collection** – Sample API requests  
+
+---
+
+**Developer:** *Taslimul Islam*  
+**Reviewed:** *2025-10-20*  

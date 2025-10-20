@@ -29,6 +29,7 @@ class OrderReportService
         if ($user->role === 'seller') {
             return [
                 'role' => 'seller',
+                'balance'  => $user->balance,
                 'products' => $this->repository->getSellerProducts($user->id),
                 'orders'   => $this->repository->getOrdersWithSellerProducts($user->id),
             ];

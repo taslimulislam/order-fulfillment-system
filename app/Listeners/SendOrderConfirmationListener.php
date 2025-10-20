@@ -54,7 +54,13 @@ class SendOrderConfirmationListener implements ShouldQueue
             'email' => $order->buyer->email,
         ]);
 
-        Mail::to($order->buyer->email)->send(new OrderConfirmationMail($order));
+        try {
+            Mail::to($order->buyer->email)->send(new OrderConfirmationMail($order));
+        } catch (\Throwable $e) {
+            Log::warning("Email sending failed for Order ID: {$order->id}. Skipping...", [
+                'error' => $e->getMessage(),
+            ]);
+        }
 
     }
 
